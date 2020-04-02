@@ -40,7 +40,7 @@ client = boto3.client('dynamodb',
                           endpoint_url=endpoint_url,
                           aws_access_key_id=access_key,
                           aws_secret_access_key=secret_key,
-                          region_name=region_name,),
+                          region_name=region_name,)
 ```
 
 #### 创建表
