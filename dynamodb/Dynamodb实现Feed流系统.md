@@ -118,9 +118,6 @@ def query(client,user_id,size,lastEvaluatedKey):
 
 #### 主函数
 ```
-)
-   
-
 endpoint_url = "http://localhost:8000"
 access_key = ""  # 本地Dynamodb不需要填写
 secret_key = ""

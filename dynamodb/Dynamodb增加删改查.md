@@ -117,3 +117,35 @@ limit = 1000
 response = client.scan( TableName='Music', Limit=limit)
 print(response)
 ```
+
+### 分页查询
+```
+conditions = {
+    'Artist':{
+        'AttributeValueList':[
+            {
+                'S': 'No One You Know'
+            }
+        ],
+        'ComparisonOperator': 'EQ'
+    }
+}
+
+
+response = client.query(
+        TableName='Music',
+        Limit=1,
+        KeyConditions=conditions,
+        ConsistentRead=False,
+        ScanIndexForward=False)
+print(response)        
+response = client.query(
+        TableName='Music',
+        Limit=1,
+        KeyConditions=conditions,
+        ConsistentRead=False,
+        ScanIndexForward=False,
+        ExclusiveStartKey=response['LastEvaluatedKey'])     
+print(response)        
+
+```
