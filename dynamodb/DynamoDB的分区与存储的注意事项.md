@@ -15,7 +15,7 @@
 
 单个分区可以保存10G的数据，当数据由于写入不均衡时，可能造成某些分区超过存储限制10G，这时DynamoDB将会拆分分区。
 
-![image](./images/Dynamodb的分区与存储的注意事项/3.jpg)
+![image](./images/DynamoDB的分区与存储的注意事项/3.jpg)
 
 其具体步骤为：
 
