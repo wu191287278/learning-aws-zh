@@ -33,13 +33,13 @@
 |kind|String|业务类型|
 |createdAt|Number|创建时间,用时间戳表示|
 
-> 线上系统有可能会出现对Feed流推重复的数据，如果有去重的需求可以更改成以下表结构
+> 线上系统有可能会出现对Feed流推重复的数据，如果有去重的需求可以更改成以下表结构,查询时使用全局索引进行查询
 
 
 |名称|类型|说明|
 |---|---|---|
 |userId|String|全局索引 分区键 HashKey|
-|rank|Number|全局级索引 排序键 SortKey|
+|rank|Number|全局索引 排序键 SortKey|
 |id|String|业务ID,排序键|
 |kind|String|业务类型,分区键 HashKey|
 |createdAt|Number|创建时间,用时间戳表示|
