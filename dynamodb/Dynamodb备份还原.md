@@ -119,6 +119,12 @@ print("导出:"+str(counter)+"数据")
 cat ./backup.json|sort|uniq >uniq.json
 ```
 
+> 或者切分文件,每个进程对应一个文件
+
+```
+split -l 100000 buckup.json -d -a 3 backup_
+```
+
 #### 导入数据
 ```
 table = 'Music'
