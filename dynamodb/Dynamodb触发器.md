@@ -1,0 +1,22 @@
+## Dynamodb触发器
+
+### 开通Dynamodb Stream 流服务
+
+![image](./images/Dynamodb触发器/1.jpg)
+![image](./images/Dynamodb触发器/2.jpg)
+![image](./images/Dynamodb触发器/3.jpg)
+![image](./images/Dynamodb触发器/4.jpg)
+
+### 快速开始
+
+```
+import json
+import os
+
+def handler(event, context):
+    for record in event["Records"]:
+        dynamodb = record["dynamodb"]
+        eventName = record["eventName"]
+        tableName = record["eventSourceARN"].split("/")[1]
+        print(record)
+```
