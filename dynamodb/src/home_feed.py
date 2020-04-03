@@ -79,12 +79,13 @@ client = boto3.client('dynamodb',
                           aws_access_key_id=access_key,
                           aws_secret_access_key=secret_key,
                           region_name=region_name,)
-# create_table(client)
-# importData(client)
+create_table(client)
+importData(client)
 
 response = query(client,'1',20,None)
 print(json.dumps(response["Items"],indent=4))
 
-#模拟用户下拉数据,使用LastEvaluatedKey游标
-response = query(client,'1',20,response['LastEvaluatedKey'])
-print(json.dumps(response["Items"],indent=4))
+#模拟用户不断下拉数据,使用LastEvaluatedKey游标
+while 'LastEvaluatedKey' in response:
+    response = query(client,'1',20,response['LastEvaluatedKey'])
+    print(json.dumps(response["Items"],indent=4))

@@ -14,13 +14,53 @@
 |关注页Timeline|展示其他人Feed消息的页面，例如朋友圈、微博的首页。|
 |个人页Timeline|展示自己发送过的Feed消息的页面，例如微信中的相册、微博的个人页。|
 
+### feed流的特点
+
+1. 多账号内容流：系统中有一定量的账号，账号之间存在关注、取关、拉黑等关系
+
+2. 非稳定账号关系：用户间的关系会随时发生变化
+
+3. 读写不平衡：读多写少
+
+4. 消息必达性：必须保证相关用户能看到消息
+
+### feed流系统设计
+
+![image](./images/Dynamodb实现Feed流系统/3.jpg)
+
+
+#### 推送
+
+1. 拉模式
+
+许多feed流系统初版会基于拉模式，因为用户数较少且日活低，拉取成本较低
+
+2. 推模式
+
+用户关系数比较均匀，且有上限，如朋友圈
+
+偏向推荐类feed，同一个feed对不同用户价值不同，计算feed和用户间的分数，只推荐给分数较高的用户
+
+推拉结合模式：大部分用户关系数比较均匀，少数用户千万级别，无上限。例如微博。能够解决单纯采用推模式时大V用户高并发写问题。
+
+以微博为例，使用两种推拉模式：
+
+① 在线推，离线拉：大V发布动态后，有限推送给同时在线的粉丝，离线粉丝上线后再拉取该动态。
+
+![image](./images/Dynamodb实现Feed流系统/1.jpg)
+
+② 定时推，离线拉：大V发布动态后，以常驻进程的形式推送到粉丝关注。
+
+![image](./images/Dynamodb实现Feed流系统/2.jpg)
+
+
 ### 为什么选择Dynamodb
 
 1. 存储扩展,无需考虑扩容问题
 2. 读取扩展,无需考虑扩容问题
 3. 价格低廉
 4. 天然支持排序
-5. 支持游标分页,特别适合下拉内容
+5. 支持游标分页,适合下拉内容
 
 
 #### 表结构设计
@@ -38,12 +78,18 @@
 
 |名称|类型|说明|
 |---|---|---|
-|userId|String|全局索引 分区键 HashKey|
-|rank|Number|全局索引 排序键 SortKey|
-|id|String|业务ID,排序键|
+|userId|String|全局索引 分区键|
+|rank|Number|全局索引 排序键|
+|id|String|业务ID,排序键 SortKey|
 |kind|String|业务类型,分区键 HashKey|
 |createdAt|Number|创建时间,用时间戳表示|
 
+
+### 启动一个本地的Dynamodb
+
+```
+docker run -d -p 8000:8000 ryanratcliff/dynamodb
+```
 
 #### 安装依赖包
 
@@ -145,9 +191,10 @@ importData(client)
 response = query(client,'1',20,None)
 print(json.dumps(response["Items"],indent=4))
 
-#下一页数据,不断的把LastEvaluatedKey进行传递模拟用户下拉数据
-response = query(client,'1',20,response['LastEvaluatedKey'])
-print(json.dumps(response["Items"],indent=4))
+#模拟用户不断下拉数据,使用LastEvaluatedKey游标
+while 'LastEvaluatedKey' in response:
+    response = query(client,'1',20,response['LastEvaluatedKey'])
+    print(json.dumps(response["Items"],indent=4))
 ```
 
 #### 完整代码
