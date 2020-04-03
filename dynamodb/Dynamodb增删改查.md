@@ -58,6 +58,22 @@ item = {'Artist':{'S':'Andrew Lloyd Webber'},'SongTitle':{'S':'The Phantom Of th
 client.put_item(TableName='Music',Item=item)
 ```
 
+#### 删除
+
+```
+client.delete_item(
+    Key={
+        'Artist': {
+            'S': 'Andrew Lloyd Webber',
+        },
+        'SongTitle': {
+            'S': 'The Phantom Of the Opera',
+        },
+    },
+    TableName='Music',
+)
+```
+
 #### 批量写入
 > BatchWriteItem操作在一个或多个表中放入或删除多个项。对BatchWriteItem的单个调用可以写入高达16MB的数据，其中可以包含多达25个put或delete请求。要写入的单个项可能高达400kb。
 
