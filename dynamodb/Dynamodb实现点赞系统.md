@@ -55,7 +55,7 @@
 |ownerId|HashKey 分区键|
 |rank|RangeKey 排序键|
 
-### 启动一个本地的Dynamodb
+#### 启动一个本地的Dynamodb
 
 ```
 docker run -d -p 8000:8000 ryanratcliff/dynamodb
@@ -210,6 +210,24 @@ def created_owner_id_rank_index(client):
             }
         ]
     )       
+
+```
+
+#### 点赞
+```
+"""
+点赞
+user_id: 点赞用户
+owner_id: 作品所属用户
+id:作品
+"""
+def liking(client,user_id, owner_id, id):
+    # 使用时间戳代替rank,正式环境请使用snowflake算法生成有序rank
+    rank = int(round(time.time() * 1000000))
+    created_at = int(round(time.time() * 1000))
+
+    item = {'userId':{'S':user_id},'rank':{'N':str(rank)},'id':{'S':id},'ownerId':{'S':owner_id},'createdAt':{'N':str(created_at)}}
+    client.put_item(TableName='liking',Item=item)
 
 ```
 
