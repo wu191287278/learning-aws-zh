@@ -430,4 +430,4 @@ while 'LastEvaluatedKey' in response:
 
 #### 完整代码
 
-* [HomeFeed](./src/home_feed.py)
+* [Liking](./src/liking.py)
