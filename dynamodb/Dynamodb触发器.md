@@ -20,3 +20,8 @@ def handler(event, context):
         tableName = record["eventSourceARN"].split("/")[1]
         print(record)
 ```
+
+#### 启用了流的表的最大写入容量
+
+每个表 – 40000 个写入容量单位
+
