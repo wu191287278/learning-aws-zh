@@ -129,5 +129,4 @@ client.delete_table(TableName=table)
 create_test_table(client,table)
 import_test_data(client,table)
 buckup(client,table,path)
-restore(client,table,path)
-                         
+restore(client,table,path)                      
