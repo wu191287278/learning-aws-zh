@@ -10,4 +10,4 @@
 * [实现评论系统](./Dynamodb实现评论系统.md)
 * [实现Feed流系统](./Dynamodb实现Feed流系统.md)
 * [分区与存储的注意事项](./DynamoDB的分区与存储的注意事项.md)
-* [Dynamodb费用计算](./Dynamodb费用计算.md)
+* [费用计算](./Dynamodb费用计算.md)

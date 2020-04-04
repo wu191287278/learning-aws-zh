@@ -35,6 +35,8 @@
 |id|HashKey 分区键|
 |rank|RangeKey 排序键|
 
+![image](./images/Dynamodb实现点赞系统/4.jpg)
+
 
 #### 我点赞的作品索引(userId_rank)
 
@@ -44,6 +46,8 @@
 |---|---|
 |userId|HashKey 分区键|
 |rank|RangeKey 排序键|
+
+![image](./images/Dynamodb实现点赞系统/2.jpg)
 
 
 
@@ -55,6 +59,10 @@
 |---|---|
 |ownerId|HashKey 分区键|
 |rank|RangeKey 排序键|
+
+
+![image](./images/Dynamodb实现点赞系统/3.jpg)
+
 
 #### 启动一个本地的Dynamodb
 
