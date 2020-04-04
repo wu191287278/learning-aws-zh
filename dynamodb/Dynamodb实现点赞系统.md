@@ -1,4 +1,4 @@
-## Dynamodb实现Feed流系统
+## Dynamodb实现点赞系统
 
 ### 介绍
 
