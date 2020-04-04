@@ -413,6 +413,7 @@ importData(client)
 
 # 拉取点赞作品的用户
 response = query_by_id(client,'1',20,None)
+print(json.dumps(response["Items"],indent=4))
 
 # 模拟用户不断下拉数据,使用LastEvaluatedKey游标
 while 'LastEvaluatedKey' in response:
@@ -421,6 +422,7 @@ while 'LastEvaluatedKey' in response:
 
 # 拉取我点赞的作品
 response = query_by_user_id(client,'1',20,None)
+print(json.dumps(response["Items"],indent=4))
 
 # 模拟用户不断下拉数据,使用LastEvaluatedKey游标
 while 'LastEvaluatedKey' in response:
@@ -430,6 +432,8 @@ while 'LastEvaluatedKey' in response:
 
 # 拉取 我被点赞的作品
 response = query_by_owner_id(client,'1',20,None)
+print(json.dumps(response["Items"],indent=4))
+
 #模拟用户不断下拉数据,使用LastEvaluatedKey游标
 while 'LastEvaluatedKey' in response:
     response = query_by_owner_id(client,'1',20,response['LastEvaluatedKey'])
