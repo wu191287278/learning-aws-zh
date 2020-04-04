@@ -78,6 +78,11 @@
 
 事务写入请求需要 2 个写入请求单位才能对大小最多为 1 KB 的项目执行一次写入。
 
+
+### 读取费用计算公式
+![image](./images/DynamoDB的分区与存储的注意事项/6.jpg)
+
+
 ### 参考文档
 
 * [Dynamodb定价](https://amazonaws-china.com/cn/dynamodb/pricing/on-demand/)
