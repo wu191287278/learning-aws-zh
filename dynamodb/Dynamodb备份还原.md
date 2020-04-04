@@ -113,6 +113,8 @@ print("导出:"+str(counter)+"数据")
 
 #### 数据打散
 
+> 参考文档 [高效的写入数据](https://docs.aws.amazon.com/zh_cn/amazondynamodb/latest/developerguide/bp-partition-key-data-upload.html)
+
 > Dynamodb 是按照分区导出，导致写入时都是往一个分区写,容易造成分区热点。为了加快速度 把数据打散
 
 ```
@@ -124,6 +126,7 @@ cat ./backup.json|sort|uniq >uniq.json
 ```
 split -l 100000 buckup.json -d -a 3 backup_
 ```
+
 
 #### 导入数据
 ```
@@ -148,3 +151,6 @@ if len(items) != 0:
 fp.close()
 print("导入"+str(counter)+" 条数据")
 ```
+
+### 完整代码
+[Backup](./src/backup.py)
