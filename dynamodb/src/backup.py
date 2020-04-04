@@ -80,8 +80,8 @@ def buckup(client,table,path):
             response = client.scan(TableName=table,Limit=limit,ExclusiveStartKey = response['LastEvaluatedKey'])
         except Exception as e:
             print("重新尝试:%s",e)
-            # 休眠3秒重新尝试
-            time.sleep(3)
+            # 休眠1秒重新尝试
+            time.sleep(1)
             continue
         
         counter=write(response,fp,counter)

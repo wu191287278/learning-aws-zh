@@ -69,9 +69,6 @@ DynamoDB拆分出的分区只会共享原分区的读写吞吐。比如：
 ### 分区计算
 ![image](./images/DynamoDB的分区与存储的注意事项/5.jpg)
 
-### 费用计算
-![image](./images/DynamoDB的分区与存储的注意事项/6.jpg)
-
 
 ### 将吞吐容量提高到高流量分区
 
