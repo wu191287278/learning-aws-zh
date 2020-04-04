@@ -219,6 +219,7 @@ def unfollowing(client,user_id, following_id):
 
 
 #### 查询关注我的用户
+```
 """
 查询关注我的用户 按时间倒序
 user_id: 用户ID
@@ -260,7 +261,7 @@ def query_by_user_id(client,user_id,size,lastEvaluatedKey):
 
 
 #### 查询我关注的用户
-
+```
 
 """
 查询我关注的用户 按时间倒序
