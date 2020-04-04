@@ -47,7 +47,7 @@
 |userId|HashKey 分区键|
 |rank|RangeKey 排序键|
 
-![image](./images/Dynamodb实现点赞系统/2.jpg=300x200)
+![image](./images/Dynamodb实现点赞系统/2.jpg)
 
 
 
