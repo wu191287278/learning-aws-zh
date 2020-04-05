@@ -201,4 +201,5 @@ while 'LastEvaluatedKey' in response:
 
 #### 完整代码
 
-* [HomeFeed](./src/home_feed.py)
+* [创建表](./src/home_feed/create_table.py)
+* [HomeFeed](./src/home_feed/home_feed.py)

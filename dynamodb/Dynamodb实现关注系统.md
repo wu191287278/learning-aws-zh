@@ -353,4 +353,5 @@ while 'LastEvaluatedKey' in response:
 
 #### 完整代码
 
-* [Follwing](./src/following.py)
+* [创建表](./src/following/create_table.py)
+* [Follwing](./src/following/following.py)

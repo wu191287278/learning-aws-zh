@@ -442,4 +442,5 @@ while 'LastEvaluatedKey' in response:
 
 #### 完整代码
 
-* [Liking](./src/liking.py)
+* [创建表](./src/liking/create_table.py)
+* [Liking](./src/liking/liking.py)
