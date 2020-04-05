@@ -20,8 +20,8 @@
 
 |名称|类型|说明|
 |---|---|---|
-|id|String|作品ID HashKey|
-|userId|String|点赞用户ID RangeKey|
+|userId|String|点赞用户ID HashKey|
+|id|String|作品ID RangeKey|
 |ownerId|String|作品拥有者|
 |createdAt|Number|点赞时间戳|
 
@@ -82,21 +82,21 @@ def create_table(client):
         TableName='liking',
         KeySchema=[
             { 
-                'AttributeName': 'id', 
+                'AttributeName': 'userId', 
                 'KeyType': 'HASH'
             },
             { 
-                'AttributeName': 'userId', 
+                'AttributeName': 'id', 
                 'KeyType': 'RANGE'
             }
         ],
         AttributeDefinitions=[
             { 
-                'AttributeName': 'id', 
+                'AttributeName': 'userId', 
                 'AttributeType': 'S' 
             },
             { 
-                'AttributeName': 'userId', 
+                'AttributeName': 'id', 
                 'AttributeType': 'S' 
             }
         ],
