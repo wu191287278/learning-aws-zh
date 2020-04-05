@@ -283,7 +283,8 @@ client = boto3.client('dynamodb',
                           aws_secret_access_key=secret_key,
                           region_name=region_name,)
 
-table = client.delete_table(TableName = 'liking')
+# 删除表
+# client.delete_table(TableName = 'liking')
 
 create_table(client)
 created_id_created_at_index(client)
