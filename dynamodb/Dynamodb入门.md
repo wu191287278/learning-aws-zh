@@ -140,6 +140,102 @@ DynamoDB流可以捕获表中的数据修改事件，这些事件以发生的顺
 docker run -d -p 8000:8000 ryanratcliff/dynamodb
 ```
 
+### 命令行使用
+
+#### 安装aws-cli
+
+* [下载地址](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+
+#### 如果线上有aws 可以进行以下设置
+
+```
+# 会在 ~/.aws/config产生一条记录
+
+$ aws configure --profile production
+AWS Access Key ID [None]: AKIAI44QH8DHBEXAMPLE
+AWS Secret Access Key [None]: je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY
+Default region name [None]: us-east-1
+Default output format [None]: text
+```
+
+#### 创建一个表
+```
+aws dynamodb create-table \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --attribute-definitions \
+        AttributeName=Artist,AttributeType=S \
+        AttributeName=SongTitle,AttributeType=S \
+    --key-schema AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE \
+    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10
+```
+
+#### 写入一个项目
+```
+aws dynamodb put-item \
+--table-name Music  \
+--item \
+    '{"Artist": {"S": "No One You Know"}, "SongTitle": {"S": "Call Me Today"}, "AlbumTitle": {"S": "Somewhat Famous"}}' \
+--return-consumed-capacity TOTAL  
+
+aws dynamodb put-item \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --item '{ \
+        "Artist": {"S": "Acme Band"}, \
+        "SongTitle": {"S": "Happy Day"}, \
+        "AlbumTitle": {"S": "Songs About Life"} }' \
+    --return-consumed-capacity TOTAL 
+```
+
+#### 列出所有表
+```
+aws dynamodb list-tables --endpoint-url http://localhost:8000
+```
+
+#### 通过键获取
+
+```
+aws dynamodb get-item --consistent-read \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --key '{ "Artist": {"S": "Acme Band"}, "SongTitle": {"S": "Happy Day"}}'
+ 
+```
+
+#### 查询数据
+```
+aws dynamodb query \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --key-condition-expression "Artist = :name" \
+    --expression-attribute-values  '{":name":{"S":"Acme Band"}}'
+```
+
+#### 创建索引
+```
+aws dynamodb update-table \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --attribute-definitions AttributeName=AlbumTitle,AttributeType=S \
+    --global-secondary-index-updates \
+    "[{\"Create\":{\"IndexName\": \"AlbumTitle-index\",\"KeySchema\":[{\"AttributeName\":\"AlbumTitle\",\"KeyType\":\"HASH\"}], \
+    \"ProvisionedThroughput\": {\"ReadCapacityUnits\": 10, \"WriteCapacityUnits\": 5      },\"Projection\":{\"ProjectionType\":\"ALL\"}}}]"
+```
+
+#### 查看创建的索引
+```
+ aws dynamodb describe-table --endpoint-url http://localhost:8000  --table-name Music 
+```
+
+#### 查询二级索引数据
+```
+ aws dynamodb query \
+    --table-name Music \
+    --index-name AlbumTitle-index \
+    --key-condition-expression "AlbumTitle = :name" \
+    --expression-attribute-values  '{":name":{"S":"Somewhat Famous"}}'
+```
 
 ### Python 操作 DynamoDB
 
@@ -282,5 +378,6 @@ table = client.delete_table(TableName = 'Music')
 ```
 
 ### 参考文档
-
+* [Dynamodb入门](https://docs.aws.amazon.com/zh_cn/amazondynamodb/latest/developerguide/GettingStarted.CoreComponents.html)
 * [Dynamodb官方文档](https://docs.aws.amazon.com/zh_cn/amazondynamodb/latest/developerguide/Introduction.html)
+* [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#table)

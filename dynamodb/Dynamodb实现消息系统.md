@@ -7,12 +7,11 @@
 
 ### 为什么选择Dynamodb
 
-1. 吞吐量和存储空间几乎无限
-2. 可自动纵向扩展和缩减表
+1. 存储扩展,无需考虑扩容问题
+2. 读取扩展,无需考虑扩容问题
 3. 价格低廉
 4. 天然支持排序
 5. 支持游标分页,适合下拉内容
-6. 每天可处理超过 10 万亿个请求，并可支持每秒超过 2000 万个请求的峰值
 
 ### 常见的评论系统
 
@@ -227,3 +226,5 @@ print(json.dumps(response["Items"],indent=4))
 #### 完整代码
 
 * [HomeFeed](./src/home_feed.py)
+* [Gorilla-Websocket](https://github.com/gorilla/websocket)
+* [Vert.x](https://vertx.io/docs/)
