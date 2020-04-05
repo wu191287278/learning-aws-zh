@@ -34,7 +34,7 @@ def create_table(client):
 
 
 # 用于查询谁点赞了该作品
-def created_id_rank_index(client):
+def created_id_created_at_index(client):
     client.update_table(
         TableName='liking',
         AttributeDefinitions=[
@@ -43,17 +43,17 @@ def created_id_rank_index(client):
                 'AttributeType': 'S' 
             },
             { 
-                'AttributeName': 'rank', 
+                'AttributeName': 'createdAt', 
                 'AttributeType': 'N' 
             }
         ],
         GlobalSecondaryIndexUpdates=[
             {
                 'Create': {
-                    'IndexName': 'id_rank',
+                    'IndexName': 'id_createdAt',
                     'KeySchema': [
                         {'AttributeName': 'id', 'KeyType': 'HASH'},  
-                        {'AttributeName': 'rank', 'KeyType': 'RANGE'},
+                        {'AttributeName': 'createdAt', 'KeyType': 'RANGE'},
                     ],
                     'Projection': {
                         'ProjectionType': 'ALL'
@@ -68,7 +68,7 @@ def created_id_rank_index(client):
     )
 
 # 用于查询我点赞的作品
-def created_user_id_rank_index(client):
+def created_user_id_created_at_index(client):
     client.update_table(
         TableName='liking',
         AttributeDefinitions=[
@@ -77,17 +77,17 @@ def created_user_id_rank_index(client):
                 'AttributeType': 'S'
             },
             { 
-                'AttributeName': 'rank', 
+                'AttributeName': 'createdAt', 
                 'AttributeType': 'N'
             }
         ],
         GlobalSecondaryIndexUpdates=[
             {
                 'Create': {
-                    'IndexName': 'userId_rank',
+                    'IndexName': 'userId_createdAt',
                     'KeySchema': [
                         {'AttributeName': 'userId', 'KeyType': 'HASH'},  
-                        {'AttributeName': 'rank', 'KeyType': 'RANGE'},
+                        {'AttributeName': 'createdAt', 'KeyType': 'RANGE'},
                     ],
                     'Projection': {
                         'ProjectionType': 'ALL'
@@ -102,7 +102,7 @@ def created_user_id_rank_index(client):
     )
 
 # 用于查询我被点赞的作品
-def created_owner_id_rank_index(client):
+def created_owner_id_created_at_index(client):
     client.update_table(
         TableName='liking',
         AttributeDefinitions=[
@@ -111,17 +111,17 @@ def created_owner_id_rank_index(client):
                 'AttributeType': 'S'
             },
             { 
-                'AttributeName': 'rank', 
+                'AttributeName': 'createdAt', 
                 'AttributeType': 'N' 
             }
         ],
         GlobalSecondaryIndexUpdates=[
             {
                 'Create': {
-                    'IndexName': 'ownerId_rank',
+                    'IndexName': 'ownerId_createdAt',
                     'KeySchema': [
                         {'AttributeName': 'ownerId', 'KeyType': 'HASH'},  
-                        {'AttributeName': 'rank', 'KeyType': 'RANGE'},
+                        {'AttributeName': 'createdAt', 'KeyType': 'RANGE'},
                     ],
                     
                     'Projection': {
@@ -139,6 +139,8 @@ def created_owner_id_rank_index(client):
 def importData(client):
     for id in range(1,10):
         for user_id in range(1,100):
+            if user_id==id:
+                continue
             liking(client,str(user_id),str(id),str(id))
 
     
@@ -150,11 +152,9 @@ owner_id: 作品所属用户
 id:作品
 """
 def liking(client,user_id, owner_id, id):
-    # 使用时间戳代替rank,正式环境请使用snowflake算法生成有序rank
-    rank = int(round(time.time() * 1000000))
     created_at = int(round(time.time() * 1000))
 
-    item = {'userId':{'S':user_id},'rank':{'N':str(rank)},'id':{'S':id},'ownerId':{'S':owner_id},'createdAt':{'N':str(created_at)}}
+    item = {'userId':{'S':user_id},'id':{'S':id},'ownerId':{'S':owner_id},'createdAt':{'N':str(created_at)}}
     client.put_item(TableName='liking',Item=item)
 
 
@@ -193,7 +193,7 @@ def query_by_id(client,id,size,lastEvaluatedKey):
     if lastEvaluatedKey!= None:
         return client.query(
                 TableName='liking',
-                IndexName='id_rank', #使用索引
+                IndexName='id_createdAt', #使用索引
                 Limit=size,
                 KeyConditions=conditions,
                 ConsistentRead=False,
@@ -202,7 +202,7 @@ def query_by_id(client,id,size,lastEvaluatedKey):
 
     return client.query(
         TableName='liking',
-        IndexName='id_rank',  #使用索引
+        IndexName='id_createdAt',  #使用索引
         Limit=size,
         KeyConditions=conditions,
         ConsistentRead=False,
@@ -234,7 +234,7 @@ def query_by_user_id(client,user_id,size,lastEvaluatedKey):
 
     return client.query(
         TableName='liking',
-        IndexName='userId_rank',  #使用索引
+        IndexName='userId_createdAt',  #使用索引
         Limit=size,
         KeyConditions=conditions,
         ConsistentRead=False,
@@ -257,7 +257,7 @@ def query_by_owner_id(client,owner_id,size,lastEvaluatedKey):
     if lastEvaluatedKey!= None:
         return client.query(
                 TableName='liking',
-                IndexName='ownerId_rank', #使用索引
+                IndexName='ownerId_createdAt', #使用索引
                 Limit=size,
                 KeyConditions=conditions,
                 ConsistentRead=False,
@@ -266,7 +266,7 @@ def query_by_owner_id(client,owner_id,size,lastEvaluatedKey):
 
     return client.query(
         TableName='liking',
-        IndexName='ownerId_rank',  #使用索引
+        IndexName='ownerId_createdAt',  #使用索引
         Limit=size,
         KeyConditions=conditions,
         ConsistentRead=False,
@@ -283,17 +283,17 @@ client = boto3.client('dynamodb',
                           aws_secret_access_key=secret_key,
                           region_name=region_name,)
 
-# table = client.delete_table(TableName = 'liking')
+table = client.delete_table(TableName = 'liking')
 
 create_table(client)
-created_id_rank_index(client)
+created_id_created_at_index(client)
 # Dynamodb 有建时间限制 休眠3秒
 time.sleep(3)
-created_user_id_rank_index(client)
+created_user_id_created_at_index(client)
 
 # Dynamodb 有建时间限制 休眠3秒
 time.sleep(3)
-created_owner_id_rank_index(client)
+created_owner_id_created_at_index(client)
 
 # Dynamodb 有建时间限制 休眠3秒
 time.sleep(3)
