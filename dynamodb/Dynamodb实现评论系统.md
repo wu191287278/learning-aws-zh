@@ -440,5 +440,5 @@ while 'LastEvaluatedKey' in response:
 
 #### 完整代码
 
-* [创建表](./src/create_table.py)
-* [Comment](./src/comment.py)
+* [创建表](./src/comment/create_table.py)
+* [Comment](./src/comment/comment.py)
