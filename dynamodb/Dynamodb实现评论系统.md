@@ -26,7 +26,7 @@
 劣势：内容过多时需要做分页处理，较为复杂。
 
 
-#### 流模式(本文将采用的模式)
+#### 流模式
 
 展现形式类似于信息流，不管是评论还是回复，每条信息都占一层，比如laravel-china社区的评论系统。
 
@@ -56,7 +56,7 @@
 |objectId|String|作品ID HashKey分区键|
 |userId|String|发起评论的用户|
 |ownerId|String|作品拥有者|
-|replyId|String|回复指定用户ID|
+|reply|String|回复某个评论的两种方式:1. 存储作品ID_评论ID, 2.存储评论内容减少查询{"id":999891231,"objectId":"1","userId":"2","content","hello"}|
 |content|String|内容|
 |kind|String|分类 photo/gellery/user|
 |createdAt|Number|关注时间|
