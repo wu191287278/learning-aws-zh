@@ -187,8 +187,6 @@ client = boto3.client('dynamodb',
                           aws_access_key_id=access_key,
                           aws_secret_access_key=secret_key,
                           region_name=region_name,)
-create_table(client)
-importData(client)
 
 response = query(client,'1',20,None)
 print(json.dumps(response["Items"],indent=4))

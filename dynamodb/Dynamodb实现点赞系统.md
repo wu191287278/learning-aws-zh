@@ -391,25 +391,6 @@ client = boto3.client('dynamodb',
                           aws_secret_access_key=secret_key,
                           region_name=region_name,)
 
-# 删除表
-#table = client.delete_table(TableName = 'liking')
-
-create_table(client)
-created_id_created_at_index(client)
-# Dynamodb 有建时间限制 休眠3秒
-time.sleep(3)
-created_user_id_created_at_index(client)
-
-# Dynamodb 有建时间限制 休眠3秒
-time.sleep(3)
-created_owner_id_created_at_index(client)
-
-# Dynamodb 有建时间限制 休眠3秒
-time.sleep(3)
-
-# 导入测试数据
-importData(client)
-
 # 拉取点赞作品的用户
 response = query_by_id(client,'1',20,None)
 print(json.dumps(response["Items"],indent=4))
