@@ -11,7 +11,7 @@ user_id: 评论用户
 owner_id: 作品拥有者
 """
 def comment(client,object_id,user_id,owner_id,content):
-    # 使用纳秒作为id,线上请使用snowflack算法进行生成有序id
+    # 使用纳秒作为id,线上请使用snowflake算法进行生成有序id
     id = int(round(time.time() * 1000000))
     created_at = int(round(time.time() * 1000))
     item = {

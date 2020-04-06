@@ -52,7 +52,7 @@
 
 |名称|类型|说明|
 |---|---|---|
-|id|Number|评论ID 由snowflack雪花算法生成有序ID RangeKey 排序键|
+|id|Number|评论ID 由snowflake雪花算法生成有序ID RangeKey 排序键|
 |objectId|String|作品ID HashKey分区键|
 |userId|String|发起评论的用户|
 |ownerId|String|作品拥有者|
@@ -233,7 +233,7 @@ user_id: 评论用户
 owner_id: 作品拥有者
 """
 def comment(client,object_id,user_id,owner_id,content):
-    # 使用纳秒作为id,线上请使用snowflack算法进行生成有序id
+    # 使用纳秒作为id,线上请使用snowflake算法进行生成有序id
     id = int(round(time.time() * 1000000))
     created_at = int(round(time.time() * 1000))
     item = {
