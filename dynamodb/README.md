@@ -9,6 +9,7 @@
 * [费用计算](./Dynamodb费用计算.md)
 * [论文](http://arthurchiao.art/blog/amazon-dynamo-zh/)
 * [热点Key分析](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/contributorinsights_tutorial.html)
+* [错误处理](./Dynamodb错误处理.md)
 * [实现点赞系统](./Dynamodb实现点赞系统.md)
 * [实现关注系统](./Dynamodb实现关注系统.md)
 * [实现评论系统](./Dynamodb实现评论系统.md)

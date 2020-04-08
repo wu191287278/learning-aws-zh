@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>弹幕测试</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .wrapBox {
+            width: 800px;
+            height: 500px;
+            border: 0px solid #000;
+            margin: 50px auto 0;
+        }
+
+        .videoBox {
+            height: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .videoBox img {
+            width: 100%;
+            height: 100%;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            /* height: 500px; */
+        }
+
+        .danmuSend {
+            display: flex;
+            height: 40px;
+        }
+
+        #send {
+            width: 100px;
+        }
+
+        .danmu {
+            font-size: 20px;
+            position: absolute;
+            left: 800px;
+            top: 0;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapBox">
+    <div class="videoBox">
+        <video id="video" src="./1.mp4" class="videoBox" controls="controls"></video>
+        <div id="current-time" style="display: none;">0</div>
+        <input id="cursor"/>
+    </div>
+
+    <div class="danmuSend">
+        <input id="color" type="color" value="#ffffff" style="height: 100%"/>
+        <input id="text" type="text" style="flex: 1;">
+        <button id="send">发送</button>
+    </div>
+</div>
+</body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+
+<script>
+    // 作品ID
+    var objectId = "1";
+    // 发送弹幕用户
+    var userId = "1";
+    // 作品拥有者
+    var ownerId = "1";
+    var oVideoBox = document.querySelector('.videoBox');
+    var textInput = document.querySelector('#text');
+    var colorInput = document.querySelector('#color');
+    var currentTime = document.querySelector('#current-time');
+    var oSend = document.querySelector('#send');
+
+    //翻页游标
+    var cursorInput = document.querySelector("#cursor");
+
+    // websocket 的实时弹幕 单独存储
+    let wsDanmuData = [];
+    let danmuData = [];
+
+    // 发送弹幕
+    oSend.onclick = function () {
+        var text = textInput.value;
+        if(text==""){
+            return ;
+        }
+        var color = colorInput.value;
+        var time = currentTime.value?currentTime.value:1;
+        var content = {text: text, color: color, time: time};
+        var body = {
+            objectId: objectId,
+            userId: userId,
+            ownerId: ownerId,
+            content: content
+        };
+        tan(body);
+        fetch("/danmu/send",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }
+        )
+    };
+
+
+    function tan(body) {
+        let content = body['content'];
+        var oSpan = document.createElement('span');
+        oSpan.className = 'danmu';
+        oSpan.style.color = content["color"] ? content["color"] : "white";
+        oSpan.style.fontSize = content["size"] ? content["size"] : "20px";
+        oSpan.innerHTML = content["text"];
+        oVideoBox.appendChild(oSpan);
+        var maxTop = oVideoBox.clientHeight - oSpan.offsetHeight;
+        oSpan.style.top = Math.round(Math.random() * maxTop) + 'px';
+        // console.log( maxTop,oSpan.offsetHeight);
+
+        var timer = setInterval(() => {
+            var start = oSpan.offsetLeft;
+            start -= 1;
+            oSpan.style.left = start + 'px';
+
+            if (start < -oSpan.offsetWidth) {
+                clearInterval(timer);
+                oSpan.remove();
+            }
+        }, 10);
+        textInput.value = '';
+    }
+
+    function pullDanmu(){
+        if(cursorInput.value==="-1"){
+            return ;
+        }
+         fetch("/danmu/pull/"+objectId)
+            .then(res=>res.json())
+            .then(json=>{
+                let data = json['data'];
+                for (let i = 0; i < data.length; i++) {
+                    danmuData.push(data[i])
+                }
+                let cursor = json['cursor'];
+                cursorInput.value = cursor;
+            })
+    }
+
+    window.onload = function () {
+        var namespace = "/video/"+objectId; //当前播放的视频
+        var socket = io(namespace);
+
+        socket.on('message', function(message) {
+            let content = message['content'];
+            if (content["time"] > currentTime.value) {
+                wsDanmuData.push(message)
+            }
+        });
+        let videoPlayer  = document.getElementById("video");
+
+        videoPlayer.onplay = function(){
+            pullDanmu();
+        }
+
+        videoPlayer.ontimeupdate = function (event) {
+            currentTime.value = this.currentTime;
+            // 大于当前播放时间的 弹幕展示出来
+            for (let i = 0; i < danmuData.length ; i++) {
+                let item = danmuData[i];
+                let content = item["content"];
+                if (this.currentTime > content.time) {
+                    tan(item);
+                    // 删除已经弹过的弹幕
+                    danmuData.splice(0,1)
+                } else {
+                    break;
+                }
+            }
+
+          
+             // websocket弹幕 大于当前播放时间的 弹幕展示出来
+             for (let i = 0; i < wsDanmuData.length ; i++) {
+                let item = danmuData[i];
+                let content = item["content"];
+                if (this.currentTime > content.time) {
+                    tan(item);
+                    // 删除已经弹过的弹幕
+                    wsDanmuData.splice(0,i)
+                }else{
+                    break;
+                }
+            }
+           
+            //如果存量弹幕已经没了,去服务器中拉取
+            if(danmuData.length == 0){
+                pullDanmu()
+            }
+        }
+
+    }
+
+
+</script>
+
+</html>
