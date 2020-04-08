@@ -153,7 +153,11 @@
         if(cursorInput.value==="-1"){
             return ;
         }
-         fetch("/danmu/pull/"+objectId)
+        let url = "/danmu/pull/"+objectId;
+        if(cursorInput.value){
+            url = url+"?cursor="+cursorInput.value;
+        }
+         fetch(url)
             .then(res=>res.json())
             .then(json=>{
                 let data = json['data'];
@@ -170,6 +174,10 @@
         var socket = io(namespace);
 
         socket.on('message', function(message) {
+            //跳过自己发送的
+            if(message['userId']==userId){
+                return;
+            }
             let content = message['content'];
             if (content["time"] > currentTime.value) {
                 wsDanmuData.push(message)

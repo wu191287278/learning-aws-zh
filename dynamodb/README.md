@@ -13,4 +13,5 @@
 * [实现点赞系统](./Dynamodb实现点赞系统.md)
 * [实现关注系统](./Dynamodb实现关注系统.md)
 * [实现评论系统](./Dynamodb实现评论系统.md)
+* [实现弹幕系统](./Dynamodb实现弹幕系统.md)
 * [实现Feed流系统](./Dynamodb实现Feed流系统.md)

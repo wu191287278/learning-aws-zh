@@ -2,7 +2,7 @@
 
 ### 介绍
 
-弹幕在视频平台,是一个比较常见的互动操作。与评论特别相似，可以按照评论的结构进行设计. 或者直接使用评论系统,这样发送的弹幕也可以作为评论查看.本文介绍如何通过Dynamodb构建一个弹幕系统。
+弹幕在视频平台,是一个比较常见的互动操作。与特别相似，可以按照评论的结构进行设计. 或者直接使用评论系统,这样发送的弹幕也可以作为评论查看.本文介绍如何通过Dynamodb构建一个弹幕系统。
 
 ### 为什么选择Dynamodb
 
@@ -71,6 +71,44 @@ pip install boto3
 ```
 pip install flask-socketio
 ```
+
+
+### 演示
+
+#### 建表
+
+```
+python ./src/danmu/create_table.py
+```
+
+#### 启动服务
+
+```
+python ./src/danmu/danmu.py
+```
+
+#### 访问页面
+
+```
+http://localhost:5000
+```
+
+#### 发送弹幕
+
+```
+curl "http://localhost:5000/danmu/send" -H 'Content-Type:application/json' --data-binary '{"objectId":"1","userId":"1","ownerId":"1","content":{ "text":"haha" ,"color":"yellow","size":"40px","position":1,"time":14}}'
+```
+
+#### 拉取弹幕
+
+```
+curl http://localhost:5000/danmu/pull/1
+```
+
+#### 效果图
+
+![image](./images/Dynamodb实现弹幕系统/2.jpg)
+
 
 #### 创建表
 ```
@@ -273,37 +311,6 @@ def decode(item):
 ```
 
 
-### 运行
-
-#### 建表
-
-```
-python ./src/danmu/create_table.py
-```
-
-#### 启动服务
-
-```
-python ./src/danmu/danmu.py
-```
-
-#### 访问页面
-
-```
-http://localhost:5000
-```
-
-#### 发送弹幕
-
-```
-curl "http://localhost:5000/danmu/send" -H 'Content-Type:application/json' --data-binary '{"objectId":"1","userId":"1","ownerId":"1","content":{ "text":"haha" ,"color":"yellow","size":"40px","position":1,"time":14}}'
-```
-
-#### 拉取弹幕
-
-```
-curl http://localhost:5000/danmu/pull/1
-```
 
 
 
