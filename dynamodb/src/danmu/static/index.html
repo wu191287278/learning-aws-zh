@@ -121,6 +121,7 @@
                 body: JSON.stringify(body)
             }
         )
+        textInput.value = '';
     };
 
 
@@ -146,7 +147,6 @@
                 oSpan.remove();
             }
         }, 10);
-        textInput.value = '';
     }
 
 
@@ -176,9 +176,9 @@
 
         socket.on('message', function(message) {
             //跳过自己发送的
-            // if(message['userId']==userId){
-            //     return;
-            // }
+            if(message['userId']==userId){
+                return;
+            }
             wsDanmuData.push(message)
         });
         let videoPlayer  = document.getElementById("video");
