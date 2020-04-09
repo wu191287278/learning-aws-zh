@@ -193,9 +193,13 @@
             // 清空弹幕
             wsDanmuData.length = 0;
             danmuData.length = 0;
-
+            
+            let url = "/danmu/queryByTime/"+objectId;
+            if(currentTime.value){
+                url=url+"?playingTime="+currentTime.value;
+            }
             // 按照当前播放时间查询弹幕
-            fetch("/danmu/queryByTime/"+objectId)
+            fetch(url)
                 .then(res=>res.json())
                 .then(json=>{
                     let data = json['data'];

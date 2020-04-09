@@ -67,7 +67,7 @@ def query_by_time(object_id):
                     'N': str(generate_id(playing_time)) # 大于或等于客户端播放时间的弹幕
                 }
             ],
-            'ComparisonOperator': 'GE'
+            'ComparisonOperator': 'GT'
         }
     }
 
