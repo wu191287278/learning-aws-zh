@@ -86,7 +86,7 @@
     var oVideoBox = document.querySelector('.videoBox');
     var textInput = document.querySelector('#text');
     var colorInput = document.querySelector('#color');
-    var currentTime = document.querySelector('#current-time');
+    var currentTimeInput = document.querySelector('#current-time');
     var oSend = document.querySelector('#send');
 
     //翻页游标
@@ -103,7 +103,7 @@
             return ;
         }
         var color = colorInput.value;
-        var time = currentTime.value?currentTime.value:1;
+        var time = currentTimeInput.value?currentTime.value:1;
         var content = {text: text, color: color, time: time};
         var body = {
             objectId: objectId,
@@ -154,7 +154,7 @@
         if(cursorInput.value==="-1"){
             return ;
         }
-        let url = "/danmu/pull/"+objectId+"?playingTime="+currentTime.value;
+        let url = "/danmu/pull/"+objectId+"?playingTime="+currentTimeInput.value;
         if(cursorInput.value){
             url = url+"&cursor="+cursorInput.value;
         }
@@ -195,8 +195,8 @@
             danmuData.length = 0;
             
             let url = "/danmu/queryByTime/"+objectId;
-            if(currentTime.value){
-                url=url+"?playingTime="+currentTime.value;
+            if(currentTimeInput.value){
+                url=url+"?playingTime="+currentTimeInput.value;
             }
             // 按照当前播放时间查询弹幕
             fetch(url)
@@ -212,7 +212,15 @@
         }
 
         videoPlayer.ontimeupdate = function (event) {
-            currentTime.value = this.currentTime;
+
+            // 如果视频结束了,把当前播放器的时间改成0
+            if(this.currentTime===this.duration){
+                currentTimeInput.value=0;
+                return;
+            }
+
+            currentTimeInput.value = this.currentTime;
+
             // 大于当前播放时间的 弹幕展示出来
             for (let i = 0; i < danmuData.length ; i++) {
                 let item = danmuData[i];
