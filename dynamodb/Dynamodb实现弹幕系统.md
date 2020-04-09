@@ -192,7 +192,6 @@ curl "http://localhost:5000/danmu/send" -H 'Content-Type:application/json' --dat
 def send():
     body = request.get_json()
 
-    # 线上环境请用snowflake 生成唯一ID
     body['id'] = generate_id(body['content']['time'])
 
     body['createdAt']=int(time.time()*1000)
