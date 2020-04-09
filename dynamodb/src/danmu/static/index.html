@@ -221,11 +221,11 @@
 
             currentTimeInput.value = this.currentTime;
 
-            // 大于当前播放时间的 弹幕展示出来
+            // 小于当前播放时间的 弹幕展示出来
             for (let i = 0; i < danmuData.length ; i++) {
                 let item = danmuData[i];
                 let content = item["content"];
-                if (this.currentTime > content.time) {
+                if (content.time<this.currentTime) {
                     tan(item);
                     // 删除已经弹过的弹幕
                     danmuData.splice(0,1)
@@ -235,11 +235,11 @@
             }
 
           
-             // websocket弹幕 大于当前播放时间的 弹幕展示出来
+             // websocket弹幕 小于当前播放时间的 弹幕展示出来
              for (let i = 0; i < wsDanmuData.length ; i++) {
                 let item = danmuData[i];
                 let content = item["content"];
-                if (this.currentTime > content.time) {
+                if (content.time<this.currentTime) {
                     tan(item);
                     // 删除已经弹过的弹幕
                     wsDanmuData.splice(0,1)
