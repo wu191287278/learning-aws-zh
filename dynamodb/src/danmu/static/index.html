@@ -149,13 +149,14 @@
         textInput.value = '';
     }
 
+
     function pullDanmu(){
         if(cursorInput.value==="-1"){
             return ;
         }
-        let url = "/danmu/pull/"+objectId;
+        let url = "/danmu/pull/"+objectId+"?playingTime="+currentTime.value;
         if(cursorInput.value){
-            url = url+"?cursor="+cursorInput.value;
+            url = url+"&cursor="+cursorInput.value;
         }
          fetch(url)
             .then(res=>res.json())
@@ -185,8 +186,25 @@
         });
         let videoPlayer  = document.getElementById("video");
 
+        // 视频准备就绪后加载弹幕数据
         videoPlayer.onplay = function(){
-            pullDanmu();
+            // 让拉取弹幕先暂停
+            cursorInput.value="-1";
+            // 清空弹幕
+            wsDanmuData.length = 0;
+            danmuData.length = 0;
+
+            // 按照当前播放时间查询弹幕
+            fetch("/danmu/queryByTime/"+objectId)
+                .then(res=>res.json())
+                .then(json=>{
+                    let data = json['data'];
+                    for (let i = 0; i < data.length; i++) {
+                        danmuData.push(data[i])
+                    }
+                    let cursor = json['cursor'];
+                    cursorInput.value = cursor;
+                })
         }
 
         videoPlayer.ontimeupdate = function (event) {

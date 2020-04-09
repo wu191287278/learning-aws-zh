@@ -1,6 +1,7 @@
 from flask import Flask, render_template,request
 from flask_socketio import SocketIO
 import time
+import random
 import json
 import boto3
 
@@ -43,15 +44,70 @@ def send():
 
 
 """
-拉取弹幕 按id正序 curl http://localhost:5000/danmu/pull/1
+根据当前播放时间查询弹幕,用于拖拽,暂停 按id正序 curl http://localhost:5000/danmu/queryByTime/1
+object_id: 作品ID
+size: 数量
+cursor: 游标
+"""
+@app.route('/danmu/queryByTime/<object_id>',methods=['GET'])
+def query_by_time(object_id):
+    size = int(request.args.get('size','20'))
+    playing_time = float(request.args.get('playingTime','1'))
+    conditions = {
+        'objectId':{
+            'AttributeValueList':[
+                {
+                    'S': object_id
+                }
+            ],
+            'ComparisonOperator': 'EQ'
+        },
+        "id":{
+            'AttributeValueList':[
+                {
+                    'N': str(generate_id(playing_time)) # 大于或等于客户端播放时间的弹幕
+                }
+            ],
+            'ComparisonOperator': 'GE'
+        }
+    }
+
+    query_result = client.query(
+            TableName='danmu',
+            Limit=size,
+            KeyConditions=conditions,
+            ConsistentRead=False,
+            ScanIndexForward=True) # 按照ID正序排列
+
+    data= []
+    items = query_result['Items']
+    for item in items:
+        data.append(decode(item))
+        
+    # 查看是否还有下一页,如果有下一页 把游标返回给客户端使用
+    if 'LastEvaluatedKey' in query_result:
+        cursor = query_result['LastEvaluatedKey']['id']['N']
+    else :
+        # 没有游标 直接返回-1
+        cursor = '-1'    
+    return {'data':data,'cursor':cursor}
+
+
+
+"""
+根据游标拉取弹幕 按id正序 curl http://localhost:5000/danmu/pull/1
 object_id: 作品ID
 size: 数量
 cursor: 游标
 """
 @app.route('/danmu/pull/<object_id>',methods=['GET'])
 def pull(object_id):
-    size = int(request.args.get('size','20'))
     cursor = request.args.get('cursor')
+    
+    # 如果没有游标,直接按照时间查询
+    if(cursor==None):
+        return query_by_time(object_id)
+    size = int(request.args.get('size','20'))
     conditions = {
         'objectId':{
             'AttributeValueList':[
@@ -62,23 +118,14 @@ def pull(object_id):
             'ComparisonOperator': 'EQ'
         }
     }
-    query_result = {}
-    if cursor !=  None:
-        query_result = client.query(
-                TableName='danmu',
-                Limit=size,
-                KeyConditions=conditions,
-                ConsistentRead=False,
-                ScanIndexForward=True, # 按照ID正序排列
-                ExclusiveStartKey={'objectId':{'S':object_id},'id':{"N":cursor}})
-    else:
-        query_result = client.query(
-                TableName='danmu',
-                Limit=size,
-                KeyConditions=conditions,
-                ConsistentRead=False,
-                ScanIndexForward=True) # 按照ID正序排列
 
+    query_result = client.query(
+            TableName='danmu',
+            Limit=size,
+            KeyConditions=conditions,
+            ConsistentRead=False,
+            ScanIndexForward=True, # 按照ID正序排列
+            ExclusiveStartKey={'objectId':{'S':object_id},'id':{"N":cursor}})
     data= []
     items = query_result['Items']
     for item in items:
@@ -95,12 +142,10 @@ def pull(object_id):
 
 """
 生成唯一有序ID
-playing_time 当前播放时间
+int(当前播放时间字符串+当前时间戳字符串+一个随机数字符串)
 """
 def generate_id(playing_time):
-    # 线上环境请用snowflake 生成18位的唯一ID,测试使用18位的纳秒测试
-    nanosecond = int(time.time() * 1000000)
-    return nanosecond + int(((playing_time * (10 ** 13))))
+   return int(str(int(playing_time)) + str(int(time.time()*1000))+ str(random.randint(0,9)))
 
 def encode(item):
     id = item['id']
