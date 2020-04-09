@@ -23,23 +23,12 @@
 
 |名称|类型|说明|
 |---|---|---|
-|id|Number|弹幕ID 由snowflake雪花算法+当前播放时间 生成有序ID RangeKey 排序键|
+|id|Number|弹幕ID (当前播放时间字符串+当前时间戳字符串+一个随机数字符串)生成有序ID RangeKey 排序键|
 |objectId|String|作品ID HashKey分区键|
 |userId|String|发起弹幕的用户|
 |ownerId|String|作品拥有者|
 |content|String|内容 :{ "text":"haha" ,"color":"yellow","size":"40px","position":1,"time":14}|
 |createdAt|Number|发送时间|
-
-#### 弹幕ID 设计方式
-
-> (当前播放时间*1000) * 当前日期毫秒数,
-> 极端情况下会出现ID覆盖的情况,考虑到弹幕这种数据不是核心数据,可以容忍极端情况下个别数据被覆盖的情况
-
-````
-int( (20.12*1000) * (time.time() * 1000))
-````
-
-
 
 #### 创建索引(userId_id)
 
@@ -96,7 +85,15 @@ http://localhost:5000
 curl "http://localhost:5000/danmu/send" -H 'Content-Type:application/json' --data-binary '{"objectId":"1","userId":"1","ownerId":"1","content":{ "text":"haha" ,"color":"yellow","size":"40px","position":1,"time":14}}'
 ```
 
-#### 拉取弹幕
+
+#### 根据时间拉取弹幕
+
+```
+curl "http://localhost:5000/danmu/pull/1?time=20"
+```
+
+
+#### 根据游标弹幕
 
 ```
 curl http://localhost:5000/danmu/pull/1
