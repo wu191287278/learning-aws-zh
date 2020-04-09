@@ -206,13 +206,6 @@ def send():
 #### 根据当前播放时间拉取弹幕
 
 ```
-
-"""
-根据当前播放时间查询弹幕,用于拖拽,暂停 按id正序 curl http://localhost:5000/danmu/queryByTime/1
-object_id: 作品ID
-size: 数量
-cursor: 游标
-"""
 @app.route('/danmu/queryByTime/<object_id>',methods=['GET'])
 def query_by_time(object_id):
     size = int(request.args.get('size','20'))
@@ -232,7 +225,7 @@ def query_by_time(object_id):
                     'N': str(generate_id(playing_time)) # 大于或等于客户端播放时间的弹幕
                 }
             ],
-            'ComparisonOperator': 'GE'
+            'ComparisonOperator': 'GT'
         }
     }
 
@@ -255,6 +248,7 @@ def query_by_time(object_id):
         # 没有游标 直接返回-1
         cursor = '-1'    
     return {'data':data,'cursor':cursor}
+
 ```
 
 #### 根据游标拉取弹幕
