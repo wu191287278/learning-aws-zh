@@ -89,7 +89,7 @@ curl "http://localhost:5000/danmu/send" -H 'Content-Type:application/json' --dat
 #### 根据时间拉取弹幕
 
 ```
-curl "http://localhost:5000/danmu/pull/1?time=20"
+curl "http://localhost:5000/danmu/queryByTime/1?time=20"
 ```
 
 
