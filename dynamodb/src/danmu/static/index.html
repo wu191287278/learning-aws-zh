@@ -103,7 +103,7 @@
             return ;
         }
         var color = colorInput.value;
-        var time = currentTimeInput.value?currentTime.value:1;
+        var time = currentTimeInput.value?currentTimeInput.value:1;
         var content = {text: text, color: color, time: time};
         var body = {
             objectId: objectId,
@@ -176,13 +176,10 @@
 
         socket.on('message', function(message) {
             //跳过自己发送的
-            if(message['userId']==userId){
-                return;
-            }
-            let content = message['content'];
-            if (content["time"] > currentTime.value) {
-                wsDanmuData.push(message)
-            }
+            // if(message['userId']==userId){
+            //     return;
+            // }
+            wsDanmuData.push(message)
         });
         let videoPlayer  = document.getElementById("video");
 
@@ -237,7 +234,7 @@
           
              // websocket弹幕 小于当前播放时间的 弹幕展示出来
              for (let i = 0; i < wsDanmuData.length ; i++) {
-                let item = danmuData[i];
+                let item = wsDanmuData[i];
                 let content = item["content"];
                 if (content.time<this.currentTime) {
                     tan(item);
