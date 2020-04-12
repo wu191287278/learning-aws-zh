@@ -5,7 +5,7 @@ import random
 import json
 import boto3
 
-app = Flask(__name__,static_folder='./static')
+app = Flask(__name__,static_url_path='')
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
@@ -18,11 +18,6 @@ client = boto3.client('dynamodb',
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
-
-
-@app.route('/1.mp4')
-def play():
-    return app.send_static_file('1.mp4')
 
 """
 curl "http://localhost:5000/danmu/send" -H 'Content-Type:application/json' --data-binary '{"objectId":"1","userId":"1","ownerId":"1","content":{ "text":"haha" ,"color":"yellow","size":"40px","position":1,"time":14}}'

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://demo.lanrenzhijia.com/demo/72/7296/demo/ -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTML5仿电脑端微信聊天窗口界面代码</title>
+
+    <link href="./css/face.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/reset.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="container">
+            <div class="left">
+                <div class="top">
+                    <input type="text" placeholder="Search">
+                    <a href="javascript:;" class="search"></a>
+                </div>
+                <ul class="people">
+                    <li class="person" data-chat="person1">
+                        <img src="./img/thomas.jpg" alt="">
+                        <span class="name">Thomas Bangalter</span>
+                        <span class="time">2:09 PM</span>
+                        <span class="preview">I was wondering...</span>
+                    </li>
+                    <li class="person" data-chat="person2">
+                        <img src="./img/dog.png" alt="">
+                        <span class="name">Dog Woofson</span>
+                        <span class="time">1:44 PM</span>
+                        <span class="preview">I've forgotten how it felt before</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="right">
+                <div class="top"><span>To: <span class="name">Dog Woofson</span></span>
+                </div>
+                <div class="chat" data-chat="person1">
+                    <div class="conversation-start">
+                        <span>Today, 6:48 AM</span>
+                    </div>
+                    <div class="bubble you">
+                        Hello,
+                    </div>
+                    <div class="bubble you">
+                        it's me.
+                    </div>
+                    <div class="bubble you">
+                        I was wondering...
+                    </div>
+                </div>
+                <div class="chat" data-chat="person2">
+                    <div class="conversation-start">
+                        <span>Today, 5:38 PM</span>
+                    </div>
+                    <div class="bubble you">
+                        Hello, can you hear me?
+                    </div>
+                    <div class="bubble you">
+                        I'm in California dreaming
+                    </div>
+                    <div class="bubble me">
+                        ... about who we used to be.
+                    </div>
+                    <div class="bubble me">
+                        Are you serious?
+                    </div>
+                    <div class="bubble you">
+                        When we were younger and free...
+                    </div>
+                    <div class="bubble you">
+                        I've forgotten how it felt before
+                    </div>
+                </div>
+
+                <div class="write">
+                    <a href="javascript:;" class="write-link attach"></a>
+                    <input type="text">
+                    <a href="javascript:;" class="write-link smiley"></a>
+                    <a href="javascript:;" class="write-link send"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./app.js"></script>
+
+</body>
+
+</html>
