@@ -20,6 +20,9 @@
 |uuid	|uuids	|表示类型1或类型4|
 |varchar|	strings	|表示uTF8编码的字符串|
 |varint	|integers	|表示任意精度整数|
+|map	|	|字段类型|
+|set	|	|去重集合类型|
+|list	|	|集合类型|
 
 
 ### 安装 Cassandra
