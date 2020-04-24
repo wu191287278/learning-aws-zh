@@ -1,6 +1,6 @@
 ## Cassandra 增删改查
 
-### 数据类型
+### Cassandra 数据类型
 
 |数据类型|	常量|	描述|
 |---|---|---|
@@ -168,7 +168,7 @@ select * from comments where photo_id=1 limit 2;
 携带上一个ID 作为条件取 下一页数据
 
 ```
-select * from comments where photo_id=1 and id < 2
+select * from comments where photo_id=1 and id < 2 limit 2
 ```
 
 结果
